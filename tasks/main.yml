@@ -1,0 +1,19 @@
+---
+- name: create ext volume for configs
+  file: state=directory path={{ haproxy_conf_volume }}
+
+- name: put haproxy.cfg
+  template: src=haproxy.cfg dest={{ haproxy_conf_volume }}/haproxy.cfg
+
+- name: check if a haproxy container is started
+  command: bash -c "docker ps | grep {{ haproxy_container_name }}"
+  ignore_errors: True
+  register: result
+
+- name: start a {{ haproxy_container_name }} container
+  command: docker run -d
+            -v {{ haproxy_conf_volume }}/haproxy.cfg:/etc/haproxy/haproxy.cfg
+            -p {{ haproxy_port }}:8080
+            --restart=always
+            --name={{ haproxy_container_name }} gitinsky/haproxy:0.1.0
+  when: result|failed
