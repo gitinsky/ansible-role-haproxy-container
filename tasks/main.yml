@@ -2,6 +2,9 @@
 - name: create ext volume for configs
   file: state=directory path={{ haproxy_conf_volume }}
 
+- name: create ext volume for a socket
+  file: state=directory path={{ haproxy_socket_volume }} mode=0700
+
 - name: put haproxy.cfg
   template: src=haproxy.cfg dest={{ haproxy_conf_volume }}/haproxy.cfg
 
