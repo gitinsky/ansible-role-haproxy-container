@@ -13,6 +13,7 @@
 - name: start a {{ haproxy_container_name }} container
   command: docker run -d
             -v {{ haproxy_conf_volume }}/haproxy.cfg:/etc/haproxy/haproxy.cfg
+            -v {{ haproxy_socket_volume }}:/socket
             -p {{ haproxy_port }}:8080
             --restart=always
             --name={{ haproxy_container_name }} gitinsky/haproxy:0.1.0
