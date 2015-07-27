@@ -17,7 +17,7 @@
   command: docker run -d
             -v {{ haproxy_conf_volume }}/haproxy.cfg:/etc/haproxy/haproxy.cfg
             -v {{ haproxy_socket_volume }}:/socket
-            -p {{ haproxy_port }}:8080
+            {% for backend in haproxy_port_mapping %} -p {{ backend['ext_port'] }}:{{ backend['port'] }} {% endfor %}
             --restart=always
             --name={{ haproxy_container_name }} gitinsky/haproxy:0.1.0
   when: result|failed
